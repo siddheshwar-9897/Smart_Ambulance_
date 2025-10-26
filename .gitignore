@@ -1,0 +1,15 @@
+# Environment variables (sensitive data)
+.env
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Database files (if using SQLite locally)
+*.db
+
+# Logs
+*.log
+
+# VSCode settings (optional)
+.vscode/

@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="text-primary mb-1">
+                        <i class="bi bi-ambulance me-2"></i>Ambulance Dashboard
+                    </h1>
+                    <p class="text-muted mb-0">Manage your ambulance operations and emergency alerts</p>
+                </div>
+                <div class="text-end">
+                    <div class="fw-semibold" id="currentTime"></div>
+                    <small class="text-muted" id="currentDate"></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4" id="ambulanceStats">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-ambulance display-6 mb-2"></i>
+                    <h4 id="ambulanceId">--</h4>
+                    <p class="mb-0">Ambulance ID</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle display-6 mb-2"></i>
+                    <h4 id="ambulanceStatus">Idle</h4>
+                    <p class="mb-0">Current Status</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-bell display-6 mb-2"></i>
+                    <h4 id="activeAlerts">0</h4>
+                    <p class="mb-0">Active Alerts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body text-center">
+                    <i class="bi bi-geo-alt display-6 mb-2"></i>
+                    <h4 id="locationStatus">Offline</h4>
+                    <p class="mb-0">Location</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="ambulanceTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="register-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#register" type="button" role="tab">
+                                <i class="bi bi-plus-circle me-2"></i>Register Ambulance
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="alert-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#alert" type="button" role="tab">
+                                <i class="bi bi-bell me-2"></i>Emergency Alert
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="location-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#location" type="button" role="tab">
+                                <i class="bi bi-geo-alt me-2"></i>Update Location
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="history-tab" data-bs-toggle="tab" 
+                                    data-bs-target="#history" type="button" role="tab">
+                                <i class="bi bi-clock-history me-2"></i>Alert History
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="ambulanceTabContent">
+                        <!-- Register Ambulance Tab -->
+                        <div class="tab-pane fade show active" id="register" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="text-primary mb-4">
+                                        <i class="bi bi-plus-circle me-2"></i>Register New Ambulance
+                                    </h5>
+                                    <form id="registerAmbulanceForm">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="driverId" class="form-label fw-semibold">
+                                                        <i class="bi bi-person-badge me-2"></i>Driver ID *
+                                                    </label>
+                                                    <input type="number" class="form-control" id="driverId" 
+                                                           placeholder="Enter your driver ID" required>
+                                                    <div class="form-text">Your user ID from registration</div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="vehicleNumber" class="form-label fw-semibold">
+                                                        <i class="bi bi-truck me-2"></i>Vehicle Number *
+                                                    </label>
+                                                    <input type="text" class="form-control" id="vehicleNumber" 
+                                                           placeholder="e.g., MH12AB1234" required>
+                                                    <div class="form-text">Official vehicle registration number</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="alert alert-info h-100">
+                                                    <h6><i class="bi bi-info-circle me-2"></i>Registration Info</h6>
+                                                    <p class="mb-2">Before registering an ambulance, ensure:</p>
+                                                    <ul class="small">
+                                                        <li>You are registered as an ambulance driver</li>
+                                                        <li>You have your driver ID ready</li>
+                                                        <li>Vehicle number is correct and unique</li>
+                                                        <li>You have proper authorization</li>
+                                                    </ul>
+                                                    <hr>
+                                                    <small class="text-muted">
+                                                        Once registered, you can start emergency alerts and update locations.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                            <button type="reset" class="btn btn-outline-secondary me-md-2">
+                                                <i class="bi bi-arrow-clockwise me-1"></i>Clear
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="bi bi-check-circle me-1"></i>Register Ambulance
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light">
+                                        <div class="card-body text-center">
+                                            <i class="bi bi-ambulance display-1 text-primary mb-3"></i>
+                                            <h5>Ambulance Registration</h5>
+                                            <p class="text-muted">Register your ambulance to start using emergency features</p>
+                                            <div id="currentAmbulanceInfo" class="mt-3" style="display: none;">
+                                                <hr>
+                                                <h6>Current Ambulance</h6>
+                                                <p class="mb-1"><strong>ID:</strong> <span id="currentAmbulanceId"></span></p>
+                                                <p class="mb-1"><strong>Vehicle:</strong> <span id="currentAmbulanceVehicle"></span></p>
+                                                <p class="mb-0"><strong>Status:</strong> <span id="currentAmbulanceStatus" class="badge bg-success">Active</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Alert Tab -->
+                        <div class="tab-pane fade" id="alert" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="text-danger mb-4">
+                                        <i class="bi bi-bell me-2"></i>Start Emergency Alert
+                                    </h5>
+                                    <form id="startAlertForm">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="alertAmbulanceId" class="form-label fw-semibold">
+                                                        <i class="bi bi-ambulance me-2"></i>Ambulance ID *
+                                                    </label>
+                                                    <input type="number" class="form-control" id="alertAmbulanceId" 
+                                                           placeholder="Enter ambulance ID" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="alertDriverId" class="form-label fw-semibold">
+                                                        <i class="bi bi-person me-2"></i>Driver ID *
+                                                    </label>
+                                                    <input type="number" class="form-control" id="alertDriverId" 
+                                                           placeholder="Enter your driver ID" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-semibold">
+                                                        <i class="bi bi-geo-alt me-2"></i>Origin Location *
+                                                    </label>
+                                                    <div class="row g-2">
+                                                        <div class="col-6">
+                                                            <input type="number" step="any" class="form-control" 
+                                                                   id="originLat" placeholder="Latitude" required>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <input type="number" step="any" class="form-control" 
+                                                                   id="originLng" placeholder="Longitude" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-2">
+                                                        <button type="button" class="btn btn-outline-primary btn-sm" id="getCurrentLocationBtn">
+                                                            <i class="bi bi-crosshair me-1"></i>Use Current Location
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-semibold">
+                                                        <i class="bi bi-geo-alt-fill me-2"></i>Destination Location (Optional)
+                                                    </label>
+                                                    <div class="row g-2">
+                                                        <div class="col-6">
+                                                            <input type="number" step="any" class="form-control" 
+                                                                   id="destinationLat" placeholder="Latitude">
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <input type="number" step="any" class="form-control" 
+                                                                   id="destinationLng" placeholder="Longitude">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="emergencyNotes" class="form-label fw-semibold">
+                                                        <i class="bi bi-chat-text me-2"></i>Emergency Details
+                                                    </label>
+                                                    <textarea class="form-control" id="emergencyNotes" rows="4" 
+                                                              placeholder="Describe the emergency situation, patient condition, location details, etc."></textarea>
+                                                    <div class="form-text">Provide details to help police and emergency services</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-warning">
+                                            <i class="bi bi-exclamation-triangle me-2"></i>
+                                            <strong>Warning:</strong> This will notify police and emergency services. Only use for genuine emergencies.
+                                        </div>
+                                        <div class="d-grid">
+                                            <button type="submit" class="btn btn-danger btn-lg">
+                                                <i class="bi bi-bell me-1"></i>Start Emergency Alert
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-warning">
+                                        <div class="card-header bg-warning text-dark">
+                                            <h6 class="mb-0"><i class="bi bi-lightning me-2"></i>Emergency Protocol</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ol class="small">
+                                                <li>Ensure patient safety first</li>
+                                                <li>Verify location accuracy</li>
+                                                <li>Provide clear emergency details</li>
+                                                <li>Keep communication lines open</li>
+                                                <li>Follow hospital protocols</li>
+                                            </ol>
+                                            <hr>
+                                            <div class="text-center">
+                                                <i class="bi bi-telephone display-4 text-danger mb-2"></i>
+                                                <p class="mb-0"><strong>Emergency Contact</strong></p>
+                                                <p class="mb-0">Police: 100</p>
+                                                <p class="mb-0">Ambulance: 108</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Update Location Tab -->
+                        <div class="tab-pane fade" id="location" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="text-success mb-4">
+                                        <i class="bi bi-geo-alt me-2"></i>Update Current Location
+                                    </h5>
+                                    <form id="updateLocationForm">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="locationAmbulanceId" class="form-label fw-semibold">
+                                                        <i class="bi bi-ambulance me-2"></i>Ambulance ID *
+                                                    </label>
+                                                    <input type="number" class="form-control" id="locationAmbulanceId" 
+                                                           placeholder="Enter ambulance ID" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-semibold">
+                                                        <i class="bi bi-geo-alt me-2"></i>Current Coordinates *
+                                                    </label>
+                                                    <div class="row g-2">
+                                                        <div class="col-6">
+                                                            <input type="number" step="any" class="form-control" 
+                                                                   id="updateLat" placeholder="Latitude" required>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <input type="number" step="any" class="form-control" 
+                                                                   id="updateLng" placeholder="Longitude" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <button type="button" class="btn btn-primary w-100" id="detectLocationBtn">
+                                                        <i class="bi bi-crosshair me-1"></i>Detect My Current Location
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card bg-light h-100">
+                                                    <div class="card-body text-center">
+                                                        <i class="bi bi-geo-alt display-1 text-success mb-3"></i>
+                                                        <h5>Live Location Tracking</h5>
+                                                        <p class="text-muted">Keep your location updated for better emergency response coordination</p>
+                                                        <div class="mt-3">
+                                                            <small class="text-muted">
+                                                                <i class="bi bi-info-circle me-1"></i>
+                                                                Police and emergency services use this data to track your position
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                            <button type="button" class="btn btn-outline-secondary me-md-2" id="clearLocationBtn">
+                                                <i class="bi bi-arrow-clockwise me-1"></i>Clear
+                                            </button>
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="bi bi-check-circle me-1"></i>Update Location
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alert History Tab -->
+                        <div class="tab-pane fade" id="history" role="tabpanel">
+                            <h5 class="text-info mb-4">
+                                <i class="bi bi-clock-history me-2"></i>Recent Emergency Alerts
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-info">
+                                        <tr>
+                                            <th>Alert ID</th>
+                                            <th>Ambulance ID</th>
+                                            <th>Start Time</th>
+                                            <th>Status</th>
+                                            <th>Origin</th>
+                                            <th>Destination</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="alertHistoryTable">
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted py-4">
+                                                <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                                                No alert history found
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <small class="text-muted">Showing recent emergency alerts</small>
+                                <button class="btn btn-outline-primary btn-sm" id="refreshHistoryBtn">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Alerts Section -->
+    <div class="row mt-4" id="activeAlertsSection" style="display: none;">
+        <div class="col-12">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Active Emergency Alerts
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="activeAlertsList" class="row">
+                        <!-- Active alerts will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/ambulance.js') }}"></script>
+{% endblock %}

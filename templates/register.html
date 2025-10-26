@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 85vh;">
+  <div class="card p-4 shadow" style="max-width: 500px; width: 100%;">
+    <div class="text-center mb-4">
+      <i class="bi bi-person-plus display-4 text-success mb-3"></i>
+      <h3 class="text-success fw-bold">Create Account</h3>
+      <p class="text-muted">Join the Emergency Response System</p>
+    </div>
+
+    <form id="registerForm">
+      <!-- Full Name -->
+      <div class="mb-3">
+        <label for="full_name" class="form-label fw-semibold">
+          <i class="bi bi-person me-2"></i>Full Name
+        </label>
+        <input type="text" class="form-control" id="full_name" placeholder="Enter your full name" required>
+      </div>
+
+      <!-- Username (not email) -->
+      <div class="mb-3">
+        <label for="username" class="form-label fw-semibold">
+          <i class="bi bi-person-badge me-2"></i>Username
+        </label>
+        <input type="text" class="form-control" id="username" placeholder="Choose a username" required>
+        <div class="form-text">This will be your login username (not email)</div>
+      </div>
+
+      <!-- Password with strength indicator -->
+      <div class="mb-3">
+        <label for="password" class="form-label fw-semibold">
+          <i class="bi bi-lock me-2"></i>Password
+        </label>
+        <input type="password" class="form-control" id="password" placeholder="Create a strong password" required>
+        <div class="password-strength mt-2">
+          <div class="progress" style="height: 4px;">
+            <div id="passwordStrength" class="progress-bar" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-3">
+        <label for="confirm_password" class="form-label fw-semibold">
+          <i class="bi bi-lock-fill me-2"></i>Confirm Password
+        </label>
+        <input type="password" class="form-control" id="confirm_password" placeholder="Confirm your password" required>
+        <div id="passwordMatch" class="form-text"></div>
+      </div>
+
+      <!-- Role Selection -->
+      <div class="mb-4">
+        <label for="role" class="form-label fw-semibold">
+          <i class="bi bi-person-gear me-2"></i>Select Role
+        </label>
+        <select class="form-select" id="role" required>
+          <option value="">-- Choose Your Role --</option>
+          <option value="user">👤 User - Basic System Access</option>
+          <option value="ambulance">🚑 Ambulance Driver - Emergency Alerts & Location</option>
+          <option value="police">👮 Police - Monitor Emergencies & Track Ambulances</option>
+        </select>
+        <div class="form-text">Choose carefully - role determines system access</div>
+      </div>
+
+      <!-- Photo ID (Optional) -->
+      <div class="mb-3">
+        <label for="photo_id" class="form-label fw-semibold">
+          <i class="bi bi-card-image me-2"></i>Photo ID (Optional)
+        </label>
+        <input type="text" class="form-control" id="photo_id" placeholder="Photo ID reference (optional)">
+        <div class="form-text">Optional identification reference</div>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100 py-2 fw-semibold">
+        <i class="bi bi-person-plus me-2"></i>Create Account
+      </button>
+    </form>
+
+    <div class="text-center mt-4">
+      <p class="mb-2 text-muted">Already have an account?</p>
+      <a href="/login" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-box-arrow-in-right me-1"></i>Login Here
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/register.js') }}"></script>
+{% endblock %}
