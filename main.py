@@ -264,7 +264,19 @@ from ambulance import ambulance_router
 from police import police_router
 
 # Initialize FastAPI
-app = FastAPI()
+from contextlib import asynccontextmanager
+# from fastapi import FastAPI
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # startup code
+    Base.metadata.create_all(bind=engine)
+    yield
+    # shutdown code (optional)
+    # e.g., closing connections
+
+app = FastAPI(lifespan=lifespan)
+# app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
