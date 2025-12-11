@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ambulance-app-deployment
+  namespace: ambulance-app
+  labels:
+    app: ambulance-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ambulance-app
+  template:
+    metadata:
+      labels:
+        app: ambulance-app
+    spec:
+      containers:
+      - name: ambulance-app
+        image: shubham4477/ambulance-app:v1
+        ports:
+        - containerPort: 8000
+        env:
+        - name: GROQ_API_KEY
+          value: "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"
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: "Sid@9897"
+        - name: DB_HOST
+          value: "mysql-svc"
+        - name: DB_NAME
+          value: "ambulance"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
