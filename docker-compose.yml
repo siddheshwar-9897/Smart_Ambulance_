@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: smart_api
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: >
+      bash -c "
+      sleep 15 &&
+      python creates_tables.py &&
+      exec gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --workers 4 --timeout 120
+      "
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: smart_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_HOST: "%"
+    # recommended: do NOT expose mysql to the public internet in production
+    # For local debugging you can uncomment the next line
+    # ports: ["3306:3306"]
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
