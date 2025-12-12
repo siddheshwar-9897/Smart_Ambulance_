@@ -16,21 +16,21 @@ spec:
         app: mysql
     spec:
       containers:
-      - name: mysql
-        image: mysql:8.0
-        ports:
-        - containerPort: 3306
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: "Sid@9897"
-        - name: MYSQL_DATABASE
-          value: "ambulance"
-        - name: MYSQL_ROOT_HOST
-          value: "%"
-        volumeMounts:
-        - name: mysql-pv-storage
-          mountPath: /var/lib/mysql
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "Sid@9897"           # root password (mandatory)
+            - name: MYSQL_DATABASE
+              value: "ambulance"          # initial database
+            - name: MYSQL_ROOT_HOST
+              value: "%"                  # allow root access from any host
+          volumeMounts:
+            - name: mysql-pv-storage
+              mountPath: /var/lib/mysql
       volumes:
-      - name: mysql-pv-storage
-        persistentVolumeClaim:
-          claimName: mysql-pvc
+        - name: mysql-pv-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
