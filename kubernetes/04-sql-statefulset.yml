@@ -25,10 +25,6 @@ spec:
           value: "Sid@9897"
         - name: MYSQL_DATABASE
           value: "ambulance"
-        - name: MYSQL_USER
-          value: "root"
-        - name: MYSQL_PASSWORD
-          value: "Sid@9897"
         - name: MYSQL_ROOT_HOST
           value: "%"
         volumeMounts:
