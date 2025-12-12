@@ -2,6 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Install netcat for initContainer wait logic
+RUN apt-get update && apt-get install -y netcat && apt-get clean
+
 # Copy everything
 COPY . .
 
