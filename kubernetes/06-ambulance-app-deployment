@@ -20,7 +20,7 @@ spec:
     spec:
       initContainers:
         - name: init-db
-          image: shubham4477/ambulance-app:v1
+          image: shubham4477/ambulance-app:v2
           command:
             - /bin/sh
             - -c
