@@ -1,36 +1,54 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mysql
   namespace: ambulance-app
-  labels:
-    app: mysql
 spec:
+  serviceName: mysql       # must match headless service
   replicas: 1
+
   selector:
     matchLabels:
       app: mysql
+
   template:
     metadata:
       labels:
         app: mysql
+
     spec:
       containers:
         - name: mysql
           image: mysql:8.0
           ports:
             - containerPort: 3306
+
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: "Sid@9897"           # root password (mandatory)
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
+
             - name: MYSQL_DATABASE
-              value: "ambulance"          # initial database
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_NAME
+
             - name: MYSQL_ROOT_HOST
-              value: "%"                  # allow root access from any host
+              value: "%"
+
           volumeMounts:
-            - name: mysql-pv-storage
+            - name: mysql-data
               mountPath: /var/lib/mysql
-      volumes:
-        - name: mysql-pv-storage
-          persistentVolumeClaim:
-            claimName: mysql-pvc
+
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
