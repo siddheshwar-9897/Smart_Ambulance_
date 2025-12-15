@@ -33,13 +33,25 @@ spec:
               python creates_tables.py
           env:
             - name: DB_USER
-              value: "root"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_USER
             - name: DB_PASSWORD
-              value: "Sid@9897"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
             - name: DB_HOST
-              value: "mysql-svc"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_HOST
             - name: DB_NAME
-              value: "ambulance"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_NAME
 
       containers:
         - name: ambulance-app
@@ -49,15 +61,31 @@ spec:
 
           env:
             - name: GROQ_API_KEY
-              value: "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"
+              valueFrom:
+                secretKeyRef:
+                  name: groq-secret
+                  key: GROQ_API_KEY
+
             - name: DB_USER
-              value: "root"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_USER
             - name: DB_PASSWORD
-              value: "Sid@9897"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
             - name: DB_HOST
-              value: "mysql-svc"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_HOST
             - name: DB_NAME
-              value: "ambulance"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_NAME
 
           resources:
             requests:
