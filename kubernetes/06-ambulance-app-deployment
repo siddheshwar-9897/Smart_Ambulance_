@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ambulance-app-deployment
+  namespace: ambulance-app
+  labels:
+    app: ambulance-app
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ambulance-app
+
+  template:
+    metadata:
+      labels:
+        app: ambulance-app
+
+    spec:
+      initContainers:
+        - name: init-db
+          image: shubham4477/ambulance-app:v2
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for MySQL..."
+              until nc -z mysql-svc 3306; do
+                sleep 2
+              done
+              echo "MySQL is up. Running DB migrations..."
+              python creates_tables.py
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_HOST
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_NAME
+
+      containers:
+        - name: ambulance-app
+          image: shubham4477/ambulance-app:v1
+          ports:
+            - containerPort: 8000
+
+          env:
+            - name: GROQ_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: groq-secret
+                  key: GROQ_API_KEY
+
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PASSWORD
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_HOST
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_NAME
+
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
